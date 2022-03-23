@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -23,9 +24,9 @@ public class EmployeeRestController {
     }
 
     @GetMapping("/employees/{id}")
-    public Employee employee(@PathVariable int id){
-        Employee employee = employeeService.findById(id);
-        if(employee == null)
+    public Optional<Employee> employee(@PathVariable int id){
+        Optional<Employee> employee = employeeService.findById(id);
+        if(employee.isEmpty())
             throw new RuntimeException("Employee not found id - " + id);
         return employee;
     }
@@ -45,8 +46,8 @@ public class EmployeeRestController {
 
     @DeleteMapping("/employees/{id}")
     public String deleteEmployee(@PathVariable int id){
-        Employee employee = employeeService.findById(id);
-        if (employee == null)
+        Optional<Employee> employee = employeeService.findById(id);
+        if (employee.isEmpty())
             throw new RuntimeException("Employee not found id - " + id);
         employeeService.deleteById(id);
         return "Deleted employee id " + id;
